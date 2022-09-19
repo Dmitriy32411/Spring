@@ -34,24 +34,24 @@ public class UserDataFacade {
     }
 
     public UserBookResponse createUserWithBooks(UserBookRequest userBookRequest) {
-        log.info("Got user book create request: {}", userBookRequest);
+        //log.info("Got user book create request: {}", userBookRequest);
         UserDto userDto = userMapper.userRequestToUserDto(userBookRequest.getUserRequest());
-        log.info("Mapped user request: {}", userDto);
+        //log.info("Mapped user request: {}", userDto);
 
         UserDto createdUser = userService.createUser(userDto);
-        log.info("Created user: {}", createdUser);
+        //log.info("Created user: {}", createdUser);
 
         List<Long> bookIdList = userBookRequest.getBookRequests()
                 .stream()
                 .filter(Objects::nonNull)
                 .map(bookMapper::bookRequestToBookDto)
                 .peek(bookDto -> bookDto.setUserId(createdUser.getId()))
-                .peek(mappedBookDto -> log.info("mapped book: {}", mappedBookDto))
+         //       .peek(mappedBookDto -> log.info("mapped book: {}", mappedBookDto))
                 .map(bookService::createBook)
-                .peek(createdBook -> log.info("Created book: {}", createdBook))
+        //        .peek(createdBook -> log.info("Created book: {}", createdBook))
                 .map(BookDto::getId)
                 .toList();
-        log.info("Collected book ids: {}", bookIdList);
+        //log.info("Collected book ids: {}", bookIdList);
 
         return UserBookResponse.builder()
                 .userId(createdUser.getId())
